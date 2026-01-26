@@ -57,6 +57,12 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        electric: "hsl(var(--electric-glow))",
+        voltage: "hsl(var(--voltage-color))",
+        current: "hsl(var(--current-color))",
+        watts: "hsl(var(--watts-color))",
+        danger: "hsl(var(--danger))",
+        warning: "hsl(var(--warning))",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -65,25 +71,45 @@ export default {
       },
       keyframes: {
         "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
-          },
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
+        "pulse-glow": {
+          "0%, 100%": { 
+            boxShadow: "0 0 20px hsl(var(--electric-glow) / 0.4), 0 0 40px hsl(var(--electric-glow) / 0.2)" 
           },
-          to: {
-            height: "0",
+          "50%": { 
+            boxShadow: "0 0 30px hsl(var(--electric-glow) / 0.6), 0 0 60px hsl(var(--electric-glow) / 0.3)" 
           },
+        },
+        "pulse-danger": {
+          "0%, 100%": { 
+            boxShadow: "0 0 20px hsl(var(--danger) / 0.4)" 
+          },
+          "50%": { 
+            boxShadow: "0 0 40px hsl(var(--danger) / 0.7)" 
+          },
+        },
+        "float": {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-5px)" },
+        },
+        "data-flow": {
+          "0%": { backgroundPosition: "0% 50%" },
+          "100%": { backgroundPosition: "200% 50%" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "pulse-glow": "pulse-glow 2s ease-in-out infinite",
+        "pulse-danger": "pulse-danger 1s ease-in-out infinite",
+        "float": "float 3s ease-in-out infinite",
+        "data-flow": "data-flow 2s linear infinite",
       },
     },
   },
