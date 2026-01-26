@@ -8,52 +8,56 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 220 20% 8%;
-    --foreground: 210 40% 98%;
+    --background: 160 25% 6%;
+    --foreground: 160 20% 95%;
 
-    --card: 220 18% 12%;
-    --card-foreground: 210 40% 98%;
+    --card: 160 20% 10%;
+    --card-foreground: 160 20% 95%;
 
-    --popover: 220 18% 12%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 160 20% 10%;
+    --popover-foreground: 160 20% 95%;
 
-    --primary: 190 95% 50%;
-    --primary-foreground: 220 20% 8%;
+    --primary: 165 80% 45%;
+    --primary-foreground: 160 25% 6%;
 
-    --secondary: 220 15% 18%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 160 15% 15%;
+    --secondary-foreground: 160 20% 95%;
 
-    --muted: 220 15% 15%;
-    --muted-foreground: 215 20% 55%;
+    --muted: 160 12% 14%;
+    --muted-foreground: 160 15% 55%;
 
-    --accent: 270 80% 60%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 200 85% 55%;
+    --accent-foreground: 160 25% 6%;
 
     --destructive: 0 72% 51%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 160 20% 95%;
 
-    --border: 220 15% 20%;
-    --input: 220 15% 20%;
-    --ring: 190 95% 50%;
+    --border: 160 15% 18%;
+    --input: 160 15% 18%;
+    --ring: 165 80% 45%;
 
-    --radius: 1rem;
+    --radius: 1.25rem;
 
-    /* Custom tokens */
-    --electric-glow: 190 95% 50%;
-    --voltage-color: 45 100% 60%;
-    --current-color: 280 80% 65%;
-    --watts-color: 120 70% 50%;
-    --danger: 0 85% 60%;
-    --warning: 45 100% 55%;
+    /* EcoCambio tokens */
+    --eco-teal: 165 80% 45%;
+    --eco-blue: 200 85% 55%;
+    --eco-gradient-start: 165 75% 40%;
+    --eco-gradient-end: 200 80% 50%;
+    --voltage-color: 165 70% 50%;
+    --current-color: 200 75% 55%;
+    --power-color: 180 70% 48%;
+    --danger: 0 75% 55%;
+    --warning: 45 90% 55%;
+    --success: 145 70% 45%;
 
-    --sidebar-background: 220 18% 10%;
-    --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 190 95% 50%;
-    --sidebar-primary-foreground: 220 20% 8%;
-    --sidebar-accent: 220 15% 18%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 220 15% 20%;
-    --sidebar-ring: 190 95% 50%;
+    --sidebar-background: 160 20% 8%;
+    --sidebar-foreground: 160 20% 95%;
+    --sidebar-primary: 165 80% 45%;
+    --sidebar-primary-foreground: 160 25% 6%;
+    --sidebar-accent: 160 15% 15%;
+    --sidebar-accent-foreground: 160 20% 95%;
+    --sidebar-border: 160 15% 18%;
+    --sidebar-ring: 165 80% 45%;
   }
 }
 
