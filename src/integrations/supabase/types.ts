@@ -14,7 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      sensor_readings: {
+        Row: {
+          created_at: string
+          current: number
+          id: string
+          is_low_voltage: boolean
+          kilowatts: number
+          voltage: number
+          watts: number
+        }
+        Insert: {
+          created_at?: string
+          current: number
+          id?: string
+          is_low_voltage?: boolean
+          kilowatts: number
+          voltage: number
+          watts: number
+        }
+        Update: {
+          created_at?: string
+          current?: number
+          id?: string
+          is_low_voltage?: boolean
+          kilowatts?: number
+          voltage?: number
+          watts?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
