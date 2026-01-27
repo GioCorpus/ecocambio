@@ -44,6 +44,39 @@ export type Database = {
         }
         Relationships: []
       }
+      voltage_alerts: {
+        Row: {
+          avg_voltage: number | null
+          created_at: string
+          duration_seconds: number | null
+          ended_at: string | null
+          id: string
+          is_active: boolean
+          min_voltage: number
+          started_at: string
+        }
+        Insert: {
+          avg_voltage?: number | null
+          created_at?: string
+          duration_seconds?: number | null
+          ended_at?: string | null
+          id?: string
+          is_active?: boolean
+          min_voltage: number
+          started_at?: string
+        }
+        Update: {
+          avg_voltage?: number | null
+          created_at?: string
+          duration_seconds?: number | null
+          ended_at?: string | null
+          id?: string
+          is_active?: boolean
+          min_voltage?: number
+          started_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
