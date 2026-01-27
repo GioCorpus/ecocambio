@@ -4,13 +4,16 @@ import { EcoChart } from '@/components/EcoChart';
 import { MonitorButton } from '@/components/MonitorButton';
 import { LowVoltageAlert } from '@/components/LowVoltageAlert';
 import { ConnectionStatus } from '@/components/ConnectionStatus';
+import { AlertHistory } from '@/components/AlertHistory';
 import { useSensorData } from '@/hooks/useSensorData';
 import { useEcoSounds } from '@/hooks/useEcoSounds';
+import { useVoltageAlerts } from '@/hooks/useVoltageAlerts';
 import { useState, useEffect, useRef } from 'react';
 
 const Index = () => {
   const { readings, latestReading, isLowVoltage, isConnected } = useSensorData(5000);
   const { playConnectionSound } = useEcoSounds();
+  const { alerts, isLoading: alertsLoading, handleVoltageChange } = useVoltageAlerts();
   const [showAlert, setShowAlert] = useState(false);
   const [alertDismissed, setAlertDismissed] = useState(false);
   const hasPlayedConnection = useRef(false);
@@ -22,6 +25,13 @@ const Index = () => {
       hasPlayedConnection.current = true;
     }
   }, [isConnected, playConnectionSound]);
+
+  // Track voltage changes for alert history
+  useEffect(() => {
+    if (latestReading) {
+      handleVoltageChange(latestReading.voltage, isLowVoltage);
+    }
+  }, [latestReading, isLowVoltage, handleVoltageChange]);
 
   useEffect(() => {
     if (isLowVoltage && !alertDismissed) {
@@ -106,6 +116,9 @@ const Index = () => {
 
         {/* Chart */}
         <EcoChart readings={readings} />
+
+        {/* Alert History */}
+        <AlertHistory alerts={alerts} isLoading={alertsLoading} />
 
         {/* Monitor Button */}
         <div className="pt-2">
