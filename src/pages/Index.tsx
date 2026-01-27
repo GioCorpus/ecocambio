@@ -109,7 +109,7 @@ const Index = () => {
 
         {/* Monitor Button */}
         <div className="pt-2">
-          <MonitorButton disabled={!isConnected} />
+          <MonitorButton disabled={!isConnected} readings={readings} />
         </div>
 
         {/* Footer info */}

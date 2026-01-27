@@ -1,35 +1,51 @@
 import { Wifi, Loader2, Check } from 'lucide-react';
 import { useEcoSounds } from '@/hooks/useEcoSounds';
+import { useSensorStorage } from '@/hooks/useSensorStorage';
 import { useState } from 'react';
 import { toast } from '@/hooks/use-toast';
+import { SensorReading } from '@/hooks/useSensorData';
 
 interface MonitorButtonProps {
   onSend?: () => void;
   disabled?: boolean;
+  readings?: SensorReading[];
 }
 
-export const MonitorButton = ({ onSend, disabled }: MonitorButtonProps) => {
+export const MonitorButton = ({ onSend, disabled, readings = [] }: MonitorButtonProps) => {
   const { playSuccessSound } = useEcoSounds();
+  const { saveMultipleReadings } = useSensorStorage();
   const [status, setStatus] = useState<'idle' | 'sending' | 'success'>('idle');
 
-  const handleClick = () => {
+  const handleClick = async () => {
     if (disabled || status !== 'idle') return;
     
     setStatus('sending');
     
-    // Simulate sending data via WiFi
-    setTimeout(() => {
+    try {
+      // Save readings to Lovable Cloud
+      if (readings.length > 0) {
+        await saveMultipleReadings(readings);
+      }
+      
       playSuccessSound();
       setStatus('success');
       toast({
         title: "Datos enviados",
-        description: "Los datos se han enviado a la app EcoCambio vía Wi-Fi.",
+        description: `${readings.length} lecturas guardadas en EcoCambio Cloud.`,
       });
       onSend?.();
       
       // Reset after showing success
       setTimeout(() => setStatus('idle'), 2000);
-    }, 1800);
+    } catch (error) {
+      console.error('Error sending readings:', error);
+      setStatus('idle');
+      toast({
+        title: "Error",
+        description: "No se pudieron enviar los datos. Intenta de nuevo.",
+        variant: "destructive"
+      });
+    }
   };
 
   return (
