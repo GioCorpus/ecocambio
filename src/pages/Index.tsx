@@ -5,17 +5,21 @@ import { MonitorButton } from '@/components/MonitorButton';
 import { LowVoltageAlert } from '@/components/LowVoltageAlert';
 import { ConnectionStatus } from '@/components/ConnectionStatus';
 import { AlertHistory } from '@/components/AlertHistory';
+import { NotificationToggle } from '@/components/NotificationToggle';
 import { useSensorData } from '@/hooks/useSensorData';
 import { useEcoSounds } from '@/hooks/useEcoSounds';
 import { useVoltageAlerts } from '@/hooks/useVoltageAlerts';
+import { usePushNotifications } from '@/hooks/usePushNotifications';
 import { useState, useEffect, useRef } from 'react';
 
 const Index = () => {
   const { readings, latestReading, isLowVoltage, isConnected } = useSensorData(5000);
   const { playConnectionSound } = useEcoSounds();
   const { alerts, isLoading: alertsLoading, handleVoltageChange } = useVoltageAlerts();
+  const { isEnabled: notificationsEnabled, sendLowVoltageAlert } = usePushNotifications();
   const [showAlert, setShowAlert] = useState(false);
   const [alertDismissed, setAlertDismissed] = useState(false);
+  const hasNotifiedRef = useRef(false);
   const hasPlayedConnection = useRef(false);
 
   // Play connection sound when first connected
@@ -33,14 +37,22 @@ const Index = () => {
     }
   }, [latestReading, isLowVoltage, handleVoltageChange]);
 
+  // Handle low voltage alerts and push notifications
   useEffect(() => {
     if (isLowVoltage && !alertDismissed) {
       setShowAlert(true);
+      
+      // Send push notification (only once per alert event)
+      if (notificationsEnabled && !hasNotifiedRef.current && latestReading) {
+        sendLowVoltageAlert(latestReading.voltage);
+        hasNotifiedRef.current = true;
+      }
     }
     if (!isLowVoltage) {
       setAlertDismissed(false);
+      hasNotifiedRef.current = false;
     }
-  }, [isLowVoltage, alertDismissed]);
+  }, [isLowVoltage, alertDismissed, notificationsEnabled, sendLowVoltageAlert, latestReading]);
 
   const handleDismissAlert = () => {
     setShowAlert(false);
@@ -73,7 +85,10 @@ const Index = () => {
           <p className="text-muted-foreground text-sm">
             Monitoreo de panel solar cada 5 segundos
           </p>
-          <ConnectionStatus isConnected={isConnected} isConnecting={!isConnected} />
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-3">
+            <ConnectionStatus isConnected={isConnected} isConnecting={!isConnected} />
+            <NotificationToggle />
+          </div>
         </header>
 
         {/* Sensor Cards Grid */}

@@ -1,0 +1,19 @@
+{
+  "name": "EcoCambio - Monitor Solar",
+  "short_name": "EcoCambio",
+  "description": "Monitoreo en tiempo real de panel solar con alertas de bajo voltaje",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#14b8a6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    }
+  ],
+  "categories": ["utilities", "productivity"],
+  "lang": "es"
+}
