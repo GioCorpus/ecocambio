@@ -1,4 +1,5 @@
-import { Zap, Activity, Gauge, Sun } from 'lucide-react';
+import { Zap, Activity, Gauge, Sun, Wrench } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { EcoSensorCard } from '@/components/EcoSensorCard';
 import { EcoChart } from '@/components/EcoChart';
 import { MonitorButton } from '@/components/MonitorButton';
@@ -6,6 +7,7 @@ import { LowVoltageAlert } from '@/components/LowVoltageAlert';
 import { ConnectionStatus } from '@/components/ConnectionStatus';
 import { AlertHistory } from '@/components/AlertHistory';
 import { NotificationToggle } from '@/components/NotificationToggle';
+import { Button } from '@/components/ui/button';
 import { useSensorData } from '@/hooks/useSensorData';
 import { useEcoSounds } from '@/hooks/useEcoSounds';
 import { useVoltageAlerts } from '@/hooks/useVoltageAlerts';
@@ -88,6 +90,12 @@ const Index = () => {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-3">
             <ConnectionStatus isConnected={isConnected} isConnecting={!isConnected} />
             <NotificationToggle />
+            <Link to="/technician">
+              <Button variant="outline" size="sm" className="gap-2">
+                <Wrench className="w-4 h-4" />
+                Portal Técnico
+              </Button>
+            </Link>
           </div>
         </header>
 

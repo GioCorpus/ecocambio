@@ -14,6 +14,299 @@ export type Database = {
   }
   public: {
     Tables: {
+      alerts: {
+        Row: {
+          acknowledged_at: string | null
+          acknowledged_by: string | null
+          alert_type: string
+          created_at: string
+          id: string
+          inverter_id: string | null
+          is_active: boolean | null
+          message: string | null
+          plant_id: string
+          raw_code: string | null
+          resolved_at: string | null
+          severity: Database["public"]["Enums"]["alert_severity"]
+          started_at: string
+          title: string
+        }
+        Insert: {
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          alert_type: string
+          created_at?: string
+          id?: string
+          inverter_id?: string | null
+          is_active?: boolean | null
+          message?: string | null
+          plant_id: string
+          raw_code?: string | null
+          resolved_at?: string | null
+          severity?: Database["public"]["Enums"]["alert_severity"]
+          started_at?: string
+          title: string
+        }
+        Update: {
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          alert_type?: string
+          created_at?: string
+          id?: string
+          inverter_id?: string | null
+          is_active?: boolean | null
+          message?: string | null
+          plant_id?: string
+          raw_code?: string | null
+          resolved_at?: string | null
+          severity?: Database["public"]["Enums"]["alert_severity"]
+          started_at?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "alerts_inverter_id_fkey"
+            columns: ["inverter_id"]
+            isOneToOne: false
+            referencedRelation: "inverters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "alerts_plant_id_fkey"
+            columns: ["plant_id"]
+            isOneToOne: false
+            referencedRelation: "plants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      inverters: {
+        Row: {
+          api_credentials: Json | null
+          api_url: string | null
+          brand: Database["public"]["Enums"]["inverter_brand"]
+          created_at: string
+          firmware_version: string | null
+          id: string
+          last_seen_at: string | null
+          model: string | null
+          plant_id: string
+          rated_power_kw: number | null
+          serial_number: string | null
+          status: Database["public"]["Enums"]["connection_status"] | null
+          updated_at: string
+        }
+        Insert: {
+          api_credentials?: Json | null
+          api_url?: string | null
+          brand: Database["public"]["Enums"]["inverter_brand"]
+          created_at?: string
+          firmware_version?: string | null
+          id?: string
+          last_seen_at?: string | null
+          model?: string | null
+          plant_id: string
+          rated_power_kw?: number | null
+          serial_number?: string | null
+          status?: Database["public"]["Enums"]["connection_status"] | null
+          updated_at?: string
+        }
+        Update: {
+          api_credentials?: Json | null
+          api_url?: string | null
+          brand?: Database["public"]["Enums"]["inverter_brand"]
+          created_at?: string
+          firmware_version?: string | null
+          id?: string
+          last_seen_at?: string | null
+          model?: string | null
+          plant_id?: string
+          rated_power_kw?: number | null
+          serial_number?: string | null
+          status?: Database["public"]["Enums"]["connection_status"] | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inverters_plant_id_fkey"
+            columns: ["plant_id"]
+            isOneToOne: false
+            referencedRelation: "plants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      plant_technicians: {
+        Row: {
+          assigned_at: string
+          can_edit: boolean | null
+          id: string
+          plant_id: string
+          technician_id: string
+        }
+        Insert: {
+          assigned_at?: string
+          can_edit?: boolean | null
+          id?: string
+          plant_id: string
+          technician_id: string
+        }
+        Update: {
+          assigned_at?: string
+          can_edit?: boolean | null
+          id?: string
+          plant_id?: string
+          technician_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "plant_technicians_plant_id_fkey"
+            columns: ["plant_id"]
+            isOneToOne: false
+            referencedRelation: "plants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "plant_technicians_technician_id_fkey"
+            columns: ["technician_id"]
+            isOneToOne: false
+            referencedRelation: "technicians"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      plants: {
+        Row: {
+          address: string | null
+          capacity_kw: number | null
+          city: string | null
+          client_email: string | null
+          client_name: string | null
+          client_phone: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          installation_date: string | null
+          latitude: number | null
+          location: string | null
+          longitude: number | null
+          name: string
+          notes: string | null
+          state: string | null
+          tariff_mxn_kwh: number | null
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          capacity_kw?: number | null
+          city?: string | null
+          client_email?: string | null
+          client_name?: string | null
+          client_phone?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          installation_date?: string | null
+          latitude?: number | null
+          location?: string | null
+          longitude?: number | null
+          name: string
+          notes?: string | null
+          state?: string | null
+          tariff_mxn_kwh?: number | null
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          capacity_kw?: number | null
+          city?: string | null
+          client_email?: string | null
+          client_name?: string | null
+          client_phone?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          installation_date?: string | null
+          latitude?: number | null
+          location?: string | null
+          longitude?: number | null
+          name?: string
+          notes?: string | null
+          state?: string | null
+          tariff_mxn_kwh?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      readings: {
+        Row: {
+          battery_soc: number | null
+          created_at: string
+          current_dc: number | null
+          energy_today_kwh: number | null
+          energy_total_kwh: number | null
+          frequency_hz: number | null
+          id: string
+          inverter_id: string
+          plant_id: string
+          power_kw: number | null
+          raw_data: Json | null
+          recorded_at: string
+          temperature_c: number | null
+          voltage_ac: number | null
+          voltage_dc: number | null
+        }
+        Insert: {
+          battery_soc?: number | null
+          created_at?: string
+          current_dc?: number | null
+          energy_today_kwh?: number | null
+          energy_total_kwh?: number | null
+          frequency_hz?: number | null
+          id?: string
+          inverter_id: string
+          plant_id: string
+          power_kw?: number | null
+          raw_data?: Json | null
+          recorded_at?: string
+          temperature_c?: number | null
+          voltage_ac?: number | null
+          voltage_dc?: number | null
+        }
+        Update: {
+          battery_soc?: number | null
+          created_at?: string
+          current_dc?: number | null
+          energy_today_kwh?: number | null
+          energy_total_kwh?: number | null
+          frequency_hz?: number | null
+          id?: string
+          inverter_id?: string
+          plant_id?: string
+          power_kw?: number | null
+          raw_data?: Json | null
+          recorded_at?: string
+          temperature_c?: number | null
+          voltage_ac?: number | null
+          voltage_dc?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "readings_inverter_id_fkey"
+            columns: ["inverter_id"]
+            isOneToOne: false
+            referencedRelation: "inverters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "readings_plant_id_fkey"
+            columns: ["plant_id"]
+            isOneToOne: false
+            referencedRelation: "plants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       sensor_readings: {
         Row: {
           created_at: string
@@ -41,6 +334,60 @@ export type Database = {
           kilowatts?: number
           voltage?: number
           watts?: number
+        }
+        Relationships: []
+      }
+      technicians: {
+        Row: {
+          avatar_url: string | null
+          company: string | null
+          created_at: string
+          full_name: string
+          id: string
+          phone: string | null
+          preferences: Json | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          company?: string | null
+          created_at?: string
+          full_name: string
+          id?: string
+          phone?: string | null
+          preferences?: Json | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          company?: string | null
+          created_at?: string
+          full_name?: string
+          id?: string
+          phone?: string | null
+          preferences?: Json | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
         }
         Relationships: []
       }
@@ -82,10 +429,23 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      can_access_plant: {
+        Args: { _plant_id: string; _user_id: string }
+        Returns: boolean
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      alert_severity: "info" | "warning" | "critical"
+      app_role: "admin" | "technician" | "viewer"
+      connection_status: "online" | "offline" | "degraded" | "unknown"
+      inverter_brand: "fronius" | "huawei" | "hoymiles" | "growatt" | "sma"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -212,6 +572,11 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      alert_severity: ["info", "warning", "critical"],
+      app_role: ["admin", "technician", "viewer"],
+      connection_status: ["online", "offline", "degraded", "unknown"],
+      inverter_brand: ["fronius", "huawei", "hoymiles", "growatt", "sma"],
+    },
   },
 } as const
