@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Wifi, Server, Key, Eye, EyeOff } from 'lucide-react';
+import { Plus, Wifi, Server, Key, Eye, EyeOff, CheckCircle, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Card, CardContent } from '@/components/ui/card';
 import { BRAND_CONFIGS, type InverterBrand } from '@/types/technician';
 import { toast } from '@/hooks/use-toast';
-
+import { useFusionSolar } from '@/hooks/useFusionSolar';
 interface InverterSelectorProps {
   onAdd: (inverter: {
     brand: InverterBrand;
@@ -24,6 +24,8 @@ export const InverterSelector = ({ onAdd }: InverterSelectorProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [connectionTested, setConnectionTested] = useState(false);
+  const [selectedStation, setSelectedStation] = useState('');
 
   const [brand, setBrand] = useState<InverterBrand | ''>('');
   const [model, setModel] = useState('');
@@ -31,15 +33,53 @@ export const InverterSelector = ({ onAdd }: InverterSelectorProps) => {
   const [ratedPower, setRatedPower] = useState('');
   const [credentials, setCredentials] = useState<Record<string, string>>({});
 
+  const { isLoading: isTesting, stations, testConnection } = useFusionSolar();
+
   const selectedBrandConfig = brand ? BRAND_CONFIGS[brand] : null;
 
   const handleCredentialChange = (field: string, value: string) => {
     setCredentials(prev => ({ ...prev, [field]: value }));
   };
 
+  const handleTestConnection = async () => {
+    if (brand !== 'huawei') {
+      toast({
+        title: 'Prueba no disponible',
+        description: 'La prueba de conexión solo está disponible para Huawei FusionSolar',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    const { username, password } = credentials;
+    if (!username || !password) {
+      toast({
+        title: 'Credenciales requeridas',
+        description: 'Ingresa usuario y contraseña para probar la conexión',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    const result = await testConnection(username, password, 'eu5');
+    if (result.success) {
+      setConnectionTested(true);
+      // Vibration feedback on success
+      if ('vibrate' in navigator) {
+        navigator.vibrate([50, 30, 50]);
+      }
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!brand) return;
+
+    // Include selected station in credentials for Huawei
+    const finalCredentials = { ...credentials };
+    if (brand === 'huawei' && selectedStation) {
+      finalCredentials.site_id = selectedStation;
+    }
 
     setIsLoading(true);
 
@@ -48,7 +88,7 @@ export const InverterSelector = ({ onAdd }: InverterSelectorProps) => {
       model: model || undefined,
       serial_number: serialNumber || undefined,
       rated_power_kw: ratedPower ? parseFloat(ratedPower) : undefined,
-      api_credentials: Object.keys(credentials).length > 0 ? credentials : undefined,
+      api_credentials: Object.keys(finalCredentials).length > 0 ? finalCredentials : undefined,
     });
 
     if (result.error) {
@@ -79,6 +119,8 @@ export const InverterSelector = ({ onAdd }: InverterSelectorProps) => {
     setSerialNumber('');
     setRatedPower('');
     setCredentials({});
+    setConnectionTested(false);
+    setSelectedStation('');
   };
 
   return (
@@ -223,7 +265,7 @@ export const InverterSelector = ({ onAdd }: InverterSelectorProps) => {
                     </div>
                   )}
 
-                  {selectedBrandConfig.requiresCredentials.includes('site_id') && (
+                  {selectedBrandConfig.requiresCredentials.includes('site_id') && brand !== 'huawei' && (
                     <div className="space-y-2">
                       <Label htmlFor="site_id">Site ID / Plant ID</Label>
                       <Input
@@ -232,6 +274,60 @@ export const InverterSelector = ({ onAdd }: InverterSelectorProps) => {
                         value={credentials.site_id || ''}
                         onChange={(e) => handleCredentialChange('site_id', e.target.value)}
                       />
+                    </div>
+                  )}
+
+                  {/* Huawei-specific: Test connection button */}
+                  {brand === 'huawei' && credentials.username && credentials.password && (
+                    <div className="pt-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="w-full gap-2"
+                        onClick={handleTestConnection}
+                        disabled={isTesting}
+                      >
+                        {isTesting ? (
+                          <>
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            Probando conexión...
+                          </>
+                        ) : connectionTested ? (
+                          <>
+                            <CheckCircle className="w-4 h-4 text-success" />
+                            Conexión verificada
+                          </>
+                        ) : (
+                          <>
+                            <Wifi className="w-4 h-4" />
+                            Probar conexión FusionSolar
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  )}
+
+                  {/* Huawei-specific: Station selector */}
+                  {brand === 'huawei' && stations.length > 0 && (
+                    <div className="space-y-2 pt-2">
+                      <Label>Seleccionar Planta FusionSolar</Label>
+                      <Select value={selectedStation} onValueChange={setSelectedStation}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Seleccionar planta..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {stations.map((station) => (
+                            <SelectItem key={station.stationCode} value={station.stationCode}>
+                              <div className="flex flex-col">
+                                <span>{station.stationName}</span>
+                                <span className="text-xs text-muted-foreground">
+                                  {station.capacity} kWp - {station.stationAddr}
+                                </span>
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
                   )}
                 </div>

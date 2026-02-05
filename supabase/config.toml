@@ -1,1 +1,4 @@
 project_id = "ipewalclwxhgjajtwess"
+
+[functions.fusionsolar-sync]
+verify_jwt = false
